@@ -1,0 +1,182 @@
+﻿@model BO.Student
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        debugger;
+        $("#ddlState").change(function () {
+            debugger;
+            var state_ID = parseInt($(this).val());
+
+            if (!isNaN(state_ID)) {
+
+                var ddlCity = $("#ddlCity");
+                ddlCity.append($("<option></option>").val('').html('please wait...'))
+
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '@Url.Action("GetCities","Home")',
+                    data: { StateID: state_ID },
+                    success: function (data) {
+                        debugger;
+
+                        ddlCity.empty();
+                        ddlCity.append($("<option></option>").val('').html('--Select City--'));
+
+                        $.each(data, function (i, city) {
+                            debugger;
+                            ddlCity.append($("<option></option>").val(city.CityID).html(city.CityName));
+                        });
+                    },
+                          error: function () {
+                            alert("Error while data receiving");
+                        }
+                        });
+                 }
+            });
+        
+    });
+                
+
+    </script>
+
+@*<div>
+    <br />
+    State: @Html.DropDownList("ddlCity", (List<SelectListItem>)ViewBag.State)
+    
+</div>
+<br />
+<br />
+<div>
+    City : <select id="ddlCity"></select>
+</div>*@
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multiart/form-data" }))
+{
+    <div class="form-horizontal">
+        <h2> Student Form</h2>
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.UniversityName, "University Name ", new { @class = "control-label col-md-2", @id = "lblUniversityName" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.UniversityName, new { @class = "form-control", @id = "txtUniversityName " })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.DepartmentID, "Department  ", new { @class = "control-label col-md-2", @id = "lblDepartment" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(ddl => ddl.DepartmentID, Model.lstDepartment, "--Select Department--", new { @class = "form-control", @id = "ddlDepartment" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.FName, "First Name ", new { @class = "control-label col-md-2", @id = "lblFName" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.FName, new { @class = "form control", @id = "txtFName" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.LName, "Last Name ", new { @class = "control-label col-md-2", @id = "lblLName" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.LName, new { @class = "form control", @id = "txtLName" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Gender, "Gender", new { @class = "control-label col-md-2", @id = "lblGender" })
+            <div class="col-md-10">
+                @Html.RadioButtonFor(rd => rd.Gender, "Male")
+                @Html.Label("Male")
+
+                @Html.RadioButtonFor(rd => rd.Gender, "Female")
+                @Html.Label("Female")
+                @Html.RadioButtonFor(rd => rd.Gender, "Other")
+                @Html.Label("Other")
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.DOB, "DOB", new { @class = "control-label col-md-2", @id = "lblDOB" })
+            <div class=" col-md-10">
+                @Html.TextBoxFor(txt => txt.DOB, new { @class = "form control", @id = "txtDOB", type = "Date" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Email, "Email", new { @class = "control-label col-md-2", @id = "lblEmail" })
+            <div class=" col-md-10">
+                @Html.TextBoxFor(txt => txt.Email, new { @class = "form control", @id = "txtEmail", type = "email" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Phone, "Phone", new { @class = "control-label col-md-2", @id = "lblPhone" })
+            <div class=" col-md-10">
+                @Html.TextBoxFor(txt => txt.Phone, new { @class = "form control", @id = "txtPhone", @maxlength = "10" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.StateID, "State", new { @class = "control-label col-md-2", @id = "lblState" })
+            <div class=" col-md-10">
+                @Html.DropDownListFor(ddlState => ddlState.StateID, Model.lstState, "--Select State--", new { @class = "form control", @id = "ddlState" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.CityID, "City", new { @class = "control-label col-md-2", @id = "lblCity" })
+            <div class=" col-md-10">
+               @Html.DropDownListFor(ddlCity => ddlCity.CityID, Enumerable.Empty<SelectListItem>(), new { @class = "form control", @id = "ddlCity" })
+
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.Address, "Address", new { @class = "control-label col-md-2", @id = "lblAddress" })
+            <div class=" col-md-10">
+                @Html.TextAreaFor(ar => ar.Address, new { @class = "form control", @id = "txtarAddress" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(chkHobby => chkHobby.Hobbies, "Hobby ", new { @class = "control-label col-md-2", @id = "lblHobby" })
+            <div class="col-md-10">
+                @for (int i = 0; i < Model.Hobby.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            @Html.CheckBoxFor(chkHobby => chkHobby.Hobby[i].Selected)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(lbl => lbl.Hobby[i].Text)
+                            @Html.HiddenFor(hd => hd.Hobby[i].Value)
+                            @Html.HiddenFor(hd => hd.Hobby[i].Text)
+                        </td>
+                    </tr>
+                }
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.ProfilePicPath, "Profile Picture", new { @class = "control-label col-md-2", @id = "lblpic" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Image_File, new { @class = "form-control", @id = "txtFile", type = "file" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(lbl => lbl.ResumePath, "Resume", new { @class = "control-label col-md-2", @id = "lblResume" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(txt => txt.Resume_File, new { @class = "form-control", @id = "txtResume", type = "file" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-primary" name="Create" />
+            <input type="reset" class="btn btn-info" name="Reset" />
+        </div>
+
+    </div>
+
+}
+  }
+
